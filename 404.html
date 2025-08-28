@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .error-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .error-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .error-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            font-family: monospace;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .robot-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <div class="error-container">
+                <div class="robot-icon">🤖</div>
+                <div class="error-code">404</div>
+                <h1 class="error-title">Page Not Found</h1>
+                <p class="error-message">
+                    Sorry, the page you're looking for doesn't exist or you don't have permission to access it.
+                </p>
+                
+                <div class="error-details">
+                    <strong>Error Details:</strong><br>
+                    • Requested URL: <span id="requested-url"></span><br>
+                    • Your IP: <span id="user-ip">Loading...</span><br>
+                    • Timestamp: <span id="timestamp"></span>
+                </div>
+                
+                <p style="color: #999; font-size: 14px; margin-top: 20px;">
+                    If you believe this is an error, please contact the administrator.
+                </p>
+                
+                <a href="javascript:history.back()" class="back-btn">Go Back</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get user's IP address
+        async function getUserIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                document.getElementById('user-ip').textContent = data.ip;
+            } catch (error) {
+                document.getElementById('user-ip').textContent = 'Unable to detect';
+            }
+        }
+        
+        // Update page details
+        document.getElementById('requested-url').textContent = window.location.href;
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        
+        // Get IP address
+        getUserIP();
+    </script>
+</body>
+</html> 
