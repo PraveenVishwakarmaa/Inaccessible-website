@@ -40,7 +40,6 @@ async function getUserIP() {
 
 // Show login form
 function showLoginForm() {
-    ipCheck.classList.add('hidden');
     loginForm.classList.remove('hidden');
 }
 
