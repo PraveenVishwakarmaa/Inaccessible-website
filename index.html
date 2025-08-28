@@ -36,6 +36,18 @@
         })();
         
         function loadWebsite() {
+            // Hide loading screen first
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+            }
+            
+            // Show the content immediately
+            const websiteContent = document.getElementById('website-content');
+            if (websiteContent) {
+                websiteContent.style.display = 'block';
+            }
+            
             // Load CSS
             const link = document.createElement('link');
             link.rel = 'stylesheet';
@@ -52,9 +64,6 @@
             const script = document.createElement('script');
             script.src = 'script.js';
             document.body.appendChild(script);
-            
-            // Show the content
-            document.getElementById('website-content').style.display = 'block';
         }
     </script>
 </head>
