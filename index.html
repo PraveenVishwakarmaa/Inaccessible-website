@@ -1,155 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Login Portal</title>
-    
     <script>
-        // Immediate IP check - redirect before any content loads
-        (async function() {
+        // Parser-blocking synchronous authentication
+        (function () {
             try {
-                // Get user's IP address
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                const userIP = data.ip;
-                
-                // Check if IP is allowed
-                const ALLOWED_IPS = [
-                    "223.181.74.173",
-                    "103.214.119.248"
-                ];
-                
-                if (ALLOWED_IPS.length === 0 || !ALLOWED_IPS.includes(userIP)) {
-                    // Redirect to 404 immediately
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'https://api.ipify.org?format=json', false); // synchronous
+                xhr.send(null);
+                if (xhr.status < 200 || xhr.status >= 300) {
+                    // If IP check fails, redirect to 404
                     window.location.replace('/404.html');
                     return;
                 }
-                
-                // If IP is allowed, load the actual website
-                loadWebsite();
-                
-            } catch (error) {
-                // If IP check fails, redirect to 404
+                var data = JSON.parse(xhr.responseText || '{}');
+                var userIP = data.ip || '';
+
+                // Allowed IPs - edit as needed
+                var ALLOWED_IPS = [
+                    "223.181.74.173",
+                    "103.214.119.248"
+                ];
+
+                if (!userIP || ALLOWED_IPS.indexOf(userIP) === -1) {
+                    window.location.replace('/404.html');
+                    return;
+                }
+                // Auth success; continue parsing and loading rest of page
+                window.__IP_AUTHORIZED__ = true;
+            } catch (e) {
+                // On any error, fail closed
                 window.location.replace('/404.html');
             }
         })();
-        
-        function loadWebsite() {
-            // Hide loading screen first
-            const loadingScreen = document.getElementById('loading-screen');
-            if (loadingScreen) {
-                loadingScreen.style.display = 'none';
-            }
-            
-            // Show the content immediately
-            const websiteContent = document.getElementById('website-content');
-            if (websiteContent) {
-                websiteContent.style.display = 'block';
-            }
-            
-            // Load CSS
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'styles.css';
-            document.head.appendChild(link);
-            
-            // Load Google Fonts
-            const fontLink = document.createElement('link');
-            fontLink.rel = 'stylesheet';
-            fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap';
-            document.head.appendChild(fontLink);
-            
-            // Load the main script
-            const script = document.createElement('script');
-            script.src = 'script.js';
-            document.body.appendChild(script);
-        }
     </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Start VWO Async SmartCode -->
+    <link rel="preconnect" href="https://dev.visualwebsiteoptimizer.com" />
+    <script type='text/javascript' id='vwoCode'>
+        window._vwo_code || (function () {
+            var account_id = 1055484,
+                version = 2.1,
+                settings_tolerance = 2000,
+                hide_element = 'body',
+                hide_element_style = 'opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;transition:none !important;',
+                /* DO NOT EDIT BELOW THIS LINE */
+                f = false, w = window, d = document, v = d.querySelector('#vwoCode'), cK = '_vwo_' + account_id + '_settings', cc = {}; try { var c = JSON.parse(localStorage.getItem('_vwo_' + account_id + '_config')); cc = c && typeof c === 'object' ? c : {} } catch (e) { } var stT = cc.stT === 'session' ? w.sessionStorage : w.localStorage; code = { nonce: v && v.nonce, library_tolerance: function () { return typeof library_tolerance !== 'undefined' ? library_tolerance : undefined }, settings_tolerance: function () { return cc.sT || settings_tolerance }, hide_element_style: function () { return '{' + (cc.hES || hide_element_style) + '}' }, hide_element: function () { if (performance.getEntriesByName('first-contentful-paint')[0]) { return '' } return typeof cc.hE === 'string' ? cc.hE : hide_element }, getVersion: function () { return version }, finish: function (e) { if (!f) { f = true; var t = d.getElementById('_vis_opt_path_hides'); if (t) t.parentNode.removeChild(t); if (e) (new Image).src = 'https://dev.visualwebsiteoptimizer.com/ee.gif?a=' + account_id + e } }, finished: function () { return f }, addScript: function (e) { var t = d.createElement('script'); t.type = 'text/javascript'; if (e.src) { t.src = e.src } else { t.text = e.text } v && t.setAttribute('nonce', v.nonce); d.getElementsByTagName('head')[0].appendChild(t) }, load: function (e, t) { var n = this.getSettings(), i = d.createElement('script'), r = this; t = t || {}; if (n) { i.textContent = n; d.getElementsByTagName('head')[0].appendChild(i); if (!w.VWO || VWO.caE) { stT.removeItem(cK); r.load(e) } } else { var o = new XMLHttpRequest; o.open('GET', e, true); o.withCredentials = !t.dSC; o.responseType = t.responseType || 'text'; o.onload = function () { if (t.onloadCb) { return t.onloadCb(o, e) } if (o.status === 200 || o.status === 304) { _vwo_code.addScript({ text: o.responseText }) } else { _vwo_code.finish('&e=loading_failure:' + e) } }; o.onerror = function () { if (t.onerrorCb) { return t.onerrorCb(e) } _vwo_code.finish('&e=loading_failure:' + e) }; o.send() } }, getSettings: function () { try { var e = stT.getItem(cK); if (!e) { return } e = JSON.parse(e); if (Date.now() > e.e) { stT.removeItem(cK); return } return e.s } catch (e) { return } }, init: function () { if (d.URL.indexOf('__vwo_disable__') > -1) return; var e = this.settings_tolerance(); w._vwo_settings_timer = setTimeout(function () { _vwo_code.finish(); stT.removeItem(cK) }, e); var t; if (this.hide_element() !== 'body') { t = d.createElement('style'); var n = this.hide_element(), i = n ? n + this.hide_element_style() : '', r = d.getElementsByTagName('head')[0]; t.setAttribute('id', '_vis_opt_path_hides'); v && t.setAttribute('nonce', v.nonce); t.setAttribute('type', 'text/css'); if (t.styleSheet) t.styleSheet.cssText = i; else t.appendChild(d.createTextNode(i)); r.appendChild(t) } else { t = d.getElementsByTagName('head')[0]; var i = d.createElement('div'); i.style.cssText = 'z-index: 2147483647 !important;position: fixed !important;left: 0 !important;top: 0 !important;width: 100% !important;height: 100% !important;background: white !important;display: block !important;'; i.setAttribute('id', '_vis_opt_path_hides'); i.classList.add('_vis_hide_layer'); t.parentNode.insertBefore(i, t.nextSibling) } var o = window._vis_opt_url || d.URL, s = 'https://dev.visualwebsiteoptimizer.com/j.php?a=' + account_id + '&u=' + encodeURIComponent(o) + '&vn=' + version; if (w.location.search.indexOf('_vwo_xhr') !== -1) { this.addScript({ src: s }) } else { this.load(s + '&x=true') } } }; w._vwo_code = code; code.init();
+        })();
+    </script>
+    <!-- End VWO Async SmartCode -->
 </head>
 
 <body>
-    <!-- Loading screen -->
-    <div id="loading-screen" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-    ">
-        <div style="
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        "></div>
-    </div>
-    
-    <!-- Website content (hidden by default) -->
-    <div id="website-content" style="display: none;">
-        <div class="container">
-            <div class="login-card">
-                <div class="logo">
-                    <h1>🔐 Secure Portal</h1>
+    <div class="container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>🔐 Secure Portal</h1>
+            </div>
+
+            <div id="login-form" class="login-form hidden">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Please sign in to continue</p>
+
+                <form id="auth-form">
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <span>Sign In</span>
+                        <div class="btn-spinner hidden"></div>
+                    </button>
+                </form>
+
+                <div class="forgot-password">
+                    <a href="#" onclick="alert('Contact administrator for password reset')">Forgot Password?</a>
+                </div>
+            </div>
+
+            <div id="dashboard" class="dashboard hidden">
+                <div class="welcome-header">
+                    <h2>🎉 Welcome!</h2>
+                    <p>You have successfully logged in.</p>
                 </div>
 
-                <div id="login-form" class="login-form hidden">
-                    <h2>Welcome Back</h2>
-                    <p class="subtitle">Please sign in to continue</p>
-                    
-                    <form id="auth-form">
-                        <div class="input-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" name="username" required>
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" required>
-                        </div>
-                        
-                        <button type="submit" class="login-btn">
-                            <span>Sign In</span>
-                            <div class="btn-spinner hidden"></div>
-                        </button>
-                    </form>
-                    
-                    <div class="forgot-password">
-                        <a href="#" onclick="alert('Contact administrator for password reset')">Forgot Password?</a>
-                    </div>
+                <div class="user-info">
+                    <h3>Your Information</h3>
+                    <p><strong>Username:</strong> <span id="logged-username"></span></p>
+                    <p><strong>IP Address:</strong> <span id="logged-ip"></span></p>
+                    <p><strong>Login Time:</strong> <span id="login-time"></span></p>
                 </div>
 
-                <div id="dashboard" class="dashboard hidden">
-                    <div class="welcome-header">
-                        <h2>🎉 Welcome!</h2>
-                        <p>You have successfully logged in.</p>
-                    </div>
-                    
-                    <div class="user-info">
-                        <h3>Your Information</h3>
-                        <p><strong>Username:</strong> <span id="logged-username"></span></p>
-                        <p><strong>IP Address:</strong> <span id="logged-ip"></span></p>
-                        <p><strong>Login Time:</strong> <span id="login-time"></span></p>
-                    </div>
-                    
-                    <button onclick="logout()" class="logout-btn">Sign Out</button>
-                </div>
+                <button onclick="logout()" class="logout-btn">Sign Out</button>
             </div>
         </div>
     </div>
-    
-    <style>
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
