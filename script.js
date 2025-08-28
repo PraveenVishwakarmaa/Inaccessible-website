@@ -101,7 +101,7 @@ function logout() {
     localStorage.removeItem('loginTime');
     
     // Redirect back to authentication page
-    window.location.href = '/index.html';
+    window.location.href = './index.html';
 }
 
 // Check if user is already logged in

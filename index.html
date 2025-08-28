@@ -14,7 +14,7 @@
                 xhr.send(null);
                 if (xhr.status < 200 || xhr.status >= 300) {
                     // If IP check fails, redirect to 404
-                    window.location.replace('/404.html');
+                    window.location.replace('./404.html');
                     return;
                 }
                 var data = JSON.parse(xhr.responseText || '{}');
@@ -27,14 +27,14 @@
                 ];
 
                 if (!userIP || ALLOWED_IPS.indexOf(userIP) === -1) {
-                    window.location.replace('/404.html');
+                    window.location.replace('./404.html');
                     return;
                 }
                 // Auth success; redirect to app.html
-                window.location.replace('/app.html');
+                window.location.replace('./app.html');
             } catch (e) {
                 // On any error, fail closed
-                window.location.replace('/404.html');
+                window.location.replace('./404.html');
             }
         })();
     </script>
