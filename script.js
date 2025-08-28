@@ -1,12 +1,5 @@
-// Configuration - Update these with your and your friend's IP addresses
-const ALLOWED_IPS = [
-    "223.181.74.173",
-    "103.214.119.248"
-    // Add your IP address here
-    // Example: "192.168.1.100",
-    // Add your friend's IP address here
-    // Example: "203.0.113.45"
-];
+// Configuration - IP addresses are now checked in index.html before loading this script
+// This script only loads for authorized IP addresses
 
 // Demo credentials (change these for production)
 const VALID_CREDENTIALS = {
@@ -15,11 +8,8 @@ const VALID_CREDENTIALS = {
 };
 
 // DOM elements
-const ipCheck = document.getElementById('ip-check');
 const loginForm = document.getElementById('login-form');
-const accessDenied = document.getElementById('access-denied');
 const dashboard = document.getElementById('dashboard');
-const userIpSpan = document.getElementById('user-ip');
 const loggedUsername = document.getElementById('logged-username');
 const loggedIp = document.getElementById('logged-ip');
 const loginTime = document.getElementById('login-time');
@@ -31,33 +21,20 @@ let userIP = '';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    checkIPAccess();
+    // Since this script only loads for authorized IPs, directly show login form
+    showLoginForm();
 });
 
-// Check if user's IP is allowed
-async function checkIPAccess() {
+// Get user's IP for display purposes
+async function getUserIP() {
     try {
-        // Get user's IP address
         const response = await fetch('https://api.ipify.org?format=json');
         const data = await response.json();
         userIP = data.ip;
-        
-        // Update IP display
-        userIpSpan.textContent = userIP;
-        
-        // Check if IP is in allowed list
-        if (ALLOWED_IPS.length === 0) {
-            // If no IPs are configured, show 404 error
-            window.location.href = '/404.html';
-        } else if (ALLOWED_IPS.includes(userIP)) {
-            showLoginForm();
-        } else {
-            window.location.href = '/404.html';
-        }
+        return userIP;
     } catch (error) {
-        console.error('Error checking IP:', error);
-        // Fallback: show login form if IP check fails
-        showLoginForm();
+        console.error('Error getting IP:', error);
+        return 'Unknown';
     }
 }
 
@@ -67,20 +44,16 @@ function showLoginForm() {
     loginForm.classList.remove('hidden');
 }
 
-// Show access denied message
-function showAccessDenied() {
-    ipCheck.classList.add('hidden');
-    accessDenied.classList.remove('hidden');
-}
+// This function is no longer needed as IP check happens before script loads
 
 // Show dashboard after successful login
-function showDashboard(username) {
+async function showDashboard(username) {
     loginForm.classList.add('hidden');
     dashboard.classList.remove('hidden');
     
     // Update dashboard information
     loggedUsername.textContent = username;
-    loggedIp.textContent = userIP;
+    loggedIp.textContent = await getUserIP();
     loginTime.textContent = new Date().toLocaleString();
 }
 
