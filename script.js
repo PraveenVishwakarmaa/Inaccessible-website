@@ -100,12 +100,8 @@ function logout() {
     localStorage.removeItem('username');
     localStorage.removeItem('loginTime');
     
-    // Reset form
-    authForm.reset();
-    
-    // Show login form
-    dashboard.classList.add('hidden');
-    loginForm.classList.remove('hidden');
+    // Redirect back to authentication page
+    window.location.href = '/index.html';
 }
 
 // Check if user is already logged in
