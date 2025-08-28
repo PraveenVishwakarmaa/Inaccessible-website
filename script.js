@@ -21,6 +21,12 @@ let userIP = '';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    // Hide loading screen
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.display = 'none';
+    }
+    
     // Since this script only loads for authorized IPs, directly show login form
     showLoginForm();
 });
